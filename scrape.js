@@ -33,6 +33,7 @@ export async function scrapeChart(page, url) {
         L: "",
         C: "",
         Volume: "",
+        Volume2: "",
       };
     }
 
@@ -42,7 +43,7 @@ export async function scrapeChart(page, url) {
     );
     await new Promise((r) => setTimeout(r, 3000));
 
-    const { trendData, ohlcData, volume } = await page.evaluate(() => {
+    const { trendData, ohlcData, volume, volume2 } = await page.evaluate(() => {
       const trends = Array.from(
         document.querySelectorAll('[data-name="legend-source-item"]')
       );
@@ -85,19 +86,21 @@ export async function scrapeChart(page, url) {
           ohlcData[title] = value;
         }
       });
-      const volEl =
-        document.querySelector(
-          '[data-test-id-value-title="Volume"] .valueValue-l31H9iuA'
-        ) ||
-        Array.from(
-          document.querySelectorAll('[data-name="legend-source-title"]')
-        )
-          .find((t) => t.textContent.trim().toLowerCase() === "vol")
-          ?.closest('[data-name="legend-source-item"]')
-          ?.querySelector(".valueValue-l31H9iuA");
-      const volume = volEl?.textContent.trim() || "";
+      const volume =
+        document
+          .querySelector(
+            '[data-test-id-value-title="Volume"] .valueValue-l31H9iuA'
+          )
+          ?.textContent.trim() || "";
 
-      return { trendData, ohlcData, volume };
+      const volume2 =
+        document
+          .querySelector(
+            '[data-test-id-value-title="Volume MA"] .valueValue-l31H9iuA'
+          )
+          ?.textContent.trim() || "";
+
+      return { trendData, ohlcData, volume, volume2 };
     });
 
     const hl2 = trendData.find((t) => t.source === "hl2");
@@ -116,7 +119,7 @@ export async function scrapeChart(page, url) {
         : "N";
 
     console.log(
-      `hl2: ${hl2Color}, high: ${highColor} → ${status}, Volume:${volume}`
+      `hl2: ${hl2Color}, high: ${highColor} → ${status}, Volume:${volume}, Volume2:${volume2}`
     );
 
     return {
@@ -128,6 +131,7 @@ export async function scrapeChart(page, url) {
       L: ohlcData.L || "",
       C: ohlcData.C || "",
       Volume: volume || "",
+      Volume2: volume2 || "",
     };
   } catch (err) {
     console.error(`Fatal error at ${url}:`, err.message);
@@ -140,6 +144,7 @@ export async function scrapeChart(page, url) {
       L: "",
       C: "",
       Volume: "",
+      Volume2: "",
     };
   }
 }

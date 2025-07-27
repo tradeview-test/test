@@ -32,7 +32,7 @@ jobs:
           echo "GOOGLE_SERVICE_ACCOUNT_EMAIL=${{ secrets.GOOGLE_SERVICE_ACCOUNT_EMAIL }}" >> .env
           echo "GOOGLE_PRIVATE_KEY=\"${{ secrets.GOOGLE_PRIVATE_KEY }}\"" >> .env
           echo "BATCH_INDEX=${{ matrix.batch_index }}" >> .env
-          echo "BATCH_SIZE=95" >> .env
+          echo "BATCH_SIZE=98" >> .env
 
       - name: Restore cookies.json from base64
         run: echo "${{ secrets.COOKIES_BASE64 }}" | base64 -d > cookies.json
