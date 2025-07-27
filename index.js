@@ -51,9 +51,20 @@ async function getLinks() {
 
 async function updateSheet(results) {
   const data = results.map(
-    ({ rowIndex, status, hl2Value, highValue, O, H, L, C, Volume }) => ({
-      range: `${SHEET_NAME}!C${rowIndex}:J${rowIndex}`,
-      values: [[status, hl2Value, highValue, O, H, L, C, Volume]],
+    ({
+      rowIndex,
+      status,
+      hl2Value,
+      highValue,
+      O,
+      H,
+      L,
+      C,
+      Volume,
+      Volume2,
+    }) => ({
+      range: `${SHEET_NAME}!C${rowIndex}:K${rowIndex}`,
+      values: [[status, hl2Value, highValue, O, H, L, C, Volume, Volume2]],
     })
   );
 
