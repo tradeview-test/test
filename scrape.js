@@ -38,19 +38,19 @@ export async function scrapeChart(page, url) {
     }
 
     await page.waitForFunction(
-      () => document.querySelector('[data-name="legend-source-item"]'),
+      () => document.querySelector('[data-qa-id="legend-source-item"]'),
       { timeout: 15000 }
     );
     await new Promise((r) => setTimeout(r, 3000));
 
     const { trendData, ohlcData, volume, volume2 } = await page.evaluate(() => {
       const trends = Array.from(
-        document.querySelectorAll('[data-name="legend-source-item"]')
+        document.querySelectorAll('[data-qa-id="legend-source-item"]')
       );
 
       const getSourceType = (trend) => {
         const el = Array.from(
-          trend.querySelectorAll('[data-name="legend-source-description"]')
+          trend.querySelectorAll('[data-qa-id="legend-source-description"]')
         ).find((e) => e.title === "Source");
         return el?.querySelector("div")?.textContent.trim() || null;
       };
