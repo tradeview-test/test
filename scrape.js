@@ -57,7 +57,7 @@ export async function scrapeChart(page, url) {
 
       const getColorAndValue = (trend) => {
         const valueItems = Array.from(
-          trend.querySelectorAll(".valueItem-l31H9iuA"),
+          trend.querySelectorAll(".valueValue-l31H9iuA"),
         ).filter((el) => el.textContent.trim().match(/[\d,]+\.\d+/)); // filter only numeric looking ones
 
         const el = valueItems[0]; // pick the first valid number
@@ -148,3 +148,4 @@ export async function scrapeChart(page, url) {
     };
   }
 }
+
