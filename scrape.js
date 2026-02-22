@@ -39,25 +39,25 @@ export async function scrapeChart(page, url) {
 
     await page.waitForFunction(
       () => document.querySelector('[data-qa-id="legend-source-item"]'),
-      { timeout: 15000 }
+      { timeout: 15000 },
     );
     await new Promise((r) => setTimeout(r, 3000));
 
     const { trendData, ohlcData, volume, volume2 } = await page.evaluate(() => {
       const trends = Array.from(
-        document.querySelectorAll('[data-qa-id="legend-source-item"]')
+        document.querySelectorAll('[data-qa-id="legend-source-item"]'),
       );
 
       const getSourceType = (trend) => {
         const el = Array.from(
-          trend.querySelectorAll('[data-qa-id="legend-source-description"]')
+          trend.querySelectorAll('[data-qa-id="legend-source-description"]'),
         ).find((e) => e.title === "Source");
         return el?.querySelector("div")?.textContent.trim() || null;
       };
 
       const getColorAndValue = (trend) => {
         const valueItems = Array.from(
-          trend.querySelectorAll(".valueValue-l31H9iuA")
+          trend.querySelectorAll(".valueItem-l31H9iuA"),
         ).filter((el) => el.textContent.trim().match(/[\d,]+\.\d+/)); // filter only numeric looking ones
 
         const el = valueItems[0]; // pick the first valid number
@@ -89,14 +89,14 @@ export async function scrapeChart(page, url) {
       const volume =
         document
           .querySelector(
-            '[data-test-id-value-title="Volume"] .valueValue-l31H9iuA'
+            '[data-test-id-value-title="Volume"] .valueValue-l31H9iuA',
           )
           ?.textContent.trim() || "";
 
       const volume2 =
         document
           .querySelector(
-            '[data-test-id-value-title="Volume MA"] .valueValue-l31H9iuA'
+            '[data-test-id-value-title="Volume MA"] .valueValue-l31H9iuA',
           )
           ?.textContent.trim() || "";
 
@@ -115,11 +115,11 @@ export async function scrapeChart(page, url) {
       hl2Color === "rgb(76, 175, 80)" && highColor === "rgb(76, 175, 80)"
         ? "BUY"
         : hl2Color === "rgb(255, 82, 82)" && highColor === "rgb(255, 82, 82)"
-        ? "SELL"
-        : "N";
+          ? "SELL"
+          : "N";
 
     console.log(
-      `hl2: ${hl2Color}, high: ${highColor} → ${status}, Volume:${volume}, Volume2:${volume2}`
+      `hl2: ${hl2Color}, high: ${highColor} → ${status}, Volume:${volume}, Volume2:${volume2}`,
     );
 
     return {
