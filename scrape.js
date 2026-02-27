@@ -50,17 +50,28 @@ export async function scrapeChart(page, url) {
 
       const getSourceType = (trend) => {
         const el = Array.from(
-          trend.querySelectorAll('[data-qa-id="legend-source-description"]'),
+          trend.querySelectorAll(
+            '[data-qa-id="title-wrapper legend-source-description"]',
+          ),
         ).find((e) => e.title === "Source");
         return el?.querySelector("div")?.textContent.trim() || null;
       };
 
       const getColorAndValue = (trend) => {
-        const valueItems = Array.from(
-          trend.querySelectorAll(".valueItem-l31H9iuA"),
-        ).filter((el) => el.textContent.trim().match(/[\d,]+\.\d+/)); // filter only numeric looking ones
+        const upTrend = trend.querySelector(
+          '[data-test-id-value-title="Up Trend"] .valueValue-l31H9iuA',
+        );
 
-        const el = valueItems[0]; // pick the first valid number
+        const downTrend = trend.querySelector(
+          '[data-test-id-value-title="Down Trend"] .valueValue-l31H9iuA',
+        );
+
+        const el =
+          upTrend && upTrend.textContent.trim() !== "∅"
+            ? upTrend
+            : downTrend && downTrend.textContent.trim() !== "∅"
+              ? downTrend
+              : null;
 
         return {
           color: el?.style.color || null,
@@ -103,8 +114,8 @@ export async function scrapeChart(page, url) {
       return { trendData, ohlcData, volume, volume2 };
     });
 
-    const hl2 = trendData.find((t) => t.source === "hl2");
-    const high = trendData.find((t) => t.source === "high");
+    const hl2 = trendData.find((t) => t.source?.includes("hl2"));
+    const high = trendData.find((t) => t.source?.includes("high"));
 
     const hl2Color = hl2?.color;
     const highColor = high?.color;
